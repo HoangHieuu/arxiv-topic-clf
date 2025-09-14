@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+*.pyo
+*.pyd
+*.log
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Mac / VS Code
+.DS_Store
+.vscode/
+
+# Caches
+.cache/
+hf_cache/
+.cache_dir/
+*.cache
+
+# Project artifacts
+cache/
+outputs/
+plots/
+*.npy
+
+# Secrets
+.env
