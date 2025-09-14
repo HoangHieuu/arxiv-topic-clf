@@ -1,31 +1,91 @@
-# arxiv-topic-clf
+# ArXiv Topic Classifier
 
-Phân loại chủ đề paper từ abstract (arXiv) bằng các phương pháp ML truyền thống + Sentence Embeddings (E5/SBERT).
+![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)
 
-## 1. Yêu cầu
-- Python 3.11+
-- macOS (đã test), chạy tốt trên Linux/Windows
-- (Tuỳ chọn) GPU MPS trên Mac (Apple Silicon) cho bước embedding
+Classify arXiv **abstracts** into topics using classic ML models on top of **sentence embeddings** (E5/SBERT).  
+The pipeline runs locally in VS Code and uses **streaming** to avoid downloading the entire dataset.
 
-## 2. Cài đặt
+---
+
+## Features
+
+- **Streaming data** from `UniverseTBD/arxiv-abstracts-large` (Hugging Face).
+- **Text preprocessing**: clean punctuation/digits/whitespace, lowercase, single-label filtering.
+- **Sentence embeddings** via `intfloat/multilingual-e5-base` (Sentence-Transformers).
+- **Models**: K-Means (majority vote), KNN, Decision Tree, Gaussian Naive Bayes.
+- **Evaluation**: accuracy table, per-class precision/recall/F1, **confusion matrices** (PNG).
+
+---
+
+## Project Structure
+arxiv-topic-clf/
+├── preprocess.py # stream & filter samples, clean text, split train/test
+├── vectorize.py # encode texts with E5; saves *.npy embeddings & labels
+├── train_models.py # train/evaluate KMeans, KNN, DecisionTree, NaiveBayes
+├── requirements-preprocess.txt
+├── requirements-embed.txt
+├── requirements-train.txt
+├── cache/ # runtime artifacts (ignored by git)
+├── .gitignore
+├── LICENSE
+└── README.md
+
+> `cache/` contains generated files: JSONL splits, NumPy arrays, plots, and reports.  
+> It is **ignored** by `.gitignore` and should not be committed.
+
+---
+
+## Quickstart
+
+### 0) Create & activate a virtual environment
+
+**macOS / Linux**
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
+```
 
-# Cài theo từng bước
+### 1) Install dependencies
+```bash
 pip install -r requirements-preprocess.txt
 pip install -r requirements-embed.txt
 pip install -r requirements-train.txt
+```
 
-preprocess:
-	python preprocess.py
+### 2) Preprocess data
+```bash
+python preprocess.py
+```
 
-embed:
-	python vectorize.py
+* Outputs
 
-train:
-	python train_models.py
+cache/train.jsonl, cache/test.jsonl
 
-clean:
-	rm -rf cache/* hf_cache/*
+cache/label_to_id.json, cache/id_to_label.json
+
+### 3) Encode with sentence embeddings (E5)
+```bash
+python vectorize.py
+```
+
+* Outputs
+
+cache/X_train_emb.npy, cache/X_test_emb.npy
+
+cache/y_train.npy, cache/y_test.npy
+
+### 4) Train & evaluate models
+```bash
+python train_models.py
+```
+
+Outputs
+
+* Console: accuracy table for all models
+
+* cache/plots/: cm_kmeans.png, cm_knn.png, cm_decision_tree.png, cm_naive_bayes.png
+
+* cache/reports.json: detailed per-class metrics
+
+
