@@ -20,14 +20,21 @@ The pipeline runs locally in VS Code and uses **streaming** to avoid downloading
 ## Project Structure
 arxiv-topic-clf/
 ├── preprocess.py # stream & filter samples, clean text, split train/test
+
 ├── vectorize.py # encode texts with E5; saves *.npy embeddings & labels
+
 ├── train_models.py # train/evaluate KMeans, KNN, DecisionTree, NaiveBayes
+
 ├── requirements-preprocess.txt
+
 ├── requirements-embed.txt
+
 ├── requirements-train.txt
+
 ├── cache/ # runtime artifacts (ignored by git)
+
 ├── .gitignore
-├── LICENSE
+
 └── README.md
 
 > `cache/` contains generated files: JSONL splits, NumPy arrays, plots, and reports.  
